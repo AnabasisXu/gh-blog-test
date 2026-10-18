@@ -14,7 +14,7 @@ description: 搜索文章标题、标签和正文。
   <input
     id="search-input"
     type="search"
-    placeholder="例如：Taskwarrior、翻译、Jekyll"
+    placeholder="例如：TaskChampion、Jekyll、深模块"
     autocomplete="off"
     autofocus
     data-index="{{ '/search.json' | relative_url }}">
