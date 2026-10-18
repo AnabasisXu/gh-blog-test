@@ -1,0 +1,17 @@
+---
+layout: null
+permalink: /search.json
+---
+[
+{% for post in site.posts %}
+  {
+    "title": {{ post.title | jsonify }},
+    "url": {{ post.url | relative_url | jsonify }},
+    "date": {{ post.date | date: "%Y-%m-%d" | jsonify }},
+    "description": {{ post.description | default: "" | jsonify }},
+    "tags": {{ post.tags | jsonify }},
+    "summary": {{ post.description | default: post.excerpt | strip_html | normalize_whitespace | truncate: 160 | jsonify }},
+    "content": {{ post.content | strip_html | normalize_whitespace | jsonify }}
+  }{% unless forloop.last %},{% endunless %}
+{% endfor %}
+]

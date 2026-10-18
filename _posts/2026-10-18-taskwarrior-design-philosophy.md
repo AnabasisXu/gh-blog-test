@@ -2,6 +2,8 @@
 layout: post
 title: "Taskwarrior 的设计哲学：深模块与泄漏的命令行"
 date: 2026-10-18 23:10:00 +0800
+description: 用《A Philosophy of Software Design》的深模块与信息隐藏视角，分析 Taskwarrior 的官方哲学、TaskChampion 重写和命令行接口的复杂度泄漏。
+tags: [Taskwarrior, 软件设计, 任务管理]
 ---
 `task add '给 Alice 寄生日卡' due:friday +next` 只占一行。输入的人不需要知道任务怎么存、ID 怎么分配、同步时怎么合并冲突。把这一行拆开，后面依次是词法分析、命令解析和过滤表达式求值。再往下是任务模型、数据库与同步层。Taskwarrior 的设计哲学，大部分藏在这个落差里。
 

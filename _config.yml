@@ -1,5 +1,10 @@
-title: 测试博客
-description: GitHub Pages + Jekyll 最小可运行测试
+title: 徐振旭的博客
+description: 软件设计、翻译与技术写作
+author: 徐振旭
+email: zhenxuxu11@fudan.edu.cn
+github_username: AnabasisXu
+lang: zh-CN
+
 url: "https://anabasisxu.github.io"
 baseurl: "/gh-blog-test"
 
