@@ -1,0 +1,7 @@
+title: 测试博客
+description: GitHub Pages + Jekyll 最小可运行测试
+url: "https://anabasisxu.github.io"
+baseurl: "/gh-blog-test"
+
+markdown: kramdown
+timezone: Asia/Shanghai
