@@ -34,7 +34,10 @@ const datetime = dayjs(isModified ? modDatetime : pubDatetime).tz(
   resolveTimezone(postTimezone ?? config.site.timezone)
 );
 
-const date = datetime.format("D MMM, YYYY");
+const date =
+  config.site.lang === "zh-CN"
+    ? datetime.format("YYYY-MM-DD")
+    : datetime.format("D MMM, YYYY");
 ---
 
 <div
