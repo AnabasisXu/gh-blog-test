@@ -1,125 +1,172 @@
 ---
 import { getCollection } from "astro:content";
 import { getRelativeLocaleUrl } from "astro:i18n";
-import IconRss from "@/assets/icons/IconRss.svg";
-import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
-import Socials from "@/components/Socials.astro";
-import Card from "@/components/Card.astro";
-import LinkButton from "@/components/LinkButton.astro";
 import { getSortedPosts } from "@/utils/getSortedPosts";
-import { useTranslations } from "@/i18n";
+import { getPostUrl } from "@/utils/getPostPaths";
+import { getAssetPath } from "@/utils/withBase";
+import { formatDateISO } from "@/utils/formatDateISO";
+import { publications } from "@/data/publications";
 import config from "@/config";
 
-const { socials, posts: postsConfig } = config;
-
 const locale = Astro.currentLocale ?? config.site.lang;
-const t = useTranslations(locale);
-
-const posts = await getCollection("posts");
-const sortedPosts = getSortedPosts(posts);
-const featuredPosts = sortedPosts.filter(({ data }) => data.featured);
-const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
+const timezone = config.site.timezone ?? "Asia/Shanghai";
 const homePath = getRelativeLocaleUrl(locale, "");
+
+const posts = getSortedPosts(
+  await getCollection("posts", ({ data }) => !data.draft)
+);
+const recentPosts = posts.slice(0, 5);
+
+const news = [
+  {
+    date: "2026-11-03",
+    text: "发布《基于 urgency 分析 task 的复杂度管理》",
+    postId: "urgency-task-complexity",
+  },
+  {
+    date: "2026-10-18",
+    text: "发布《Taskwarrior 的设计哲学：深模块与泄漏的命令行》",
+    postId: "taskwarrior-design-philosophy",
+  },
+  {
+    date: "2023",
+    text: "译著《进步知识分子的死与生》出版（David Edmonds, The Murder of Professor Schlick）",
+  },
+];
+
+const postHref = (id: string) => {
+  const post = posts.find(entry => entry.id === id);
+  return post ? getPostUrl(post.id, post.filePath, locale) : undefined;
+};
 ---
 
 <Layout>
   <Header />
-  <main
-    id="main-content"
-    data-layout="index"
-    data-home-path={homePath}
-    class="app-layout my-1"
-  >
-    <section id="hero" class="border-border border-b pt-8 pb-6">
-      <h1 class="my-4 inline-block text-4xl font-bold sm:my-8 sm:text-5xl">
-        你好
-      </h1>{" "}
-      <a
-        target="_blank"
-        href={`${import.meta.env.BASE_URL.replace(/\/?$/, "/")}rss.xml`}
-        class="inline-block"
-        aria-label="RSS Feed"
-        title="RSS Feed"
-      >
-        <IconRss
-          width={20}
-          height={20}
-          class="stroke-accent scale-125 stroke-3 rtl:-rotate-90"
-        />
-        <span class="sr-only">RSS Feed</span>
-      </a>
+  <main id="main-content" data-layout="index" data-home-path={homePath} class="app-layout pb-10">
+    <header class="pt-8 pb-4">
+      <h1 class="text-[2.5rem] leading-tight">徐振旭</h1>
+      <p class="text-muted-foreground mt-1">译者 · 技术文档工程师</p>
+    </header>
 
-      <p>
-        我是徐振旭，译者、技术文档工程师。这里记录软件设计、翻译和技术写作，
-        偶尔写一点读书笔记。
-      </p>
-      <p class="mt-2">
-        可以先看{" "}
-        <a class="hover:text-accent underline decoration-dashed underline-offset-4" href={getRelativeLocaleUrl(locale, "posts")}>
-          {t.home.allPosts}
-        </a>
-        ，或者{" "}
-        <a class="hover:text-accent underline decoration-dashed underline-offset-4" href={getRelativeLocaleUrl(locale, "about")}>
-          {t.nav.about}
-        </a>。
-      </p>
-      {
-        socials.length > 0 && (
-          <div class="mt-4 flex max-sm:flex-col sm:items-center">
-            <div class="me-2 mb-1 whitespace-nowrap sm:mb-0">
-              {t.home.socialLinks}:
-            </div>
-            <Socials />
-          </div>
-        )
-      }
+    <div
+      class="border-border flex flex-col gap-6 border-t pt-6 sm:flex-row-reverse sm:items-start"
+    >
+      <figure class="max-w-[200px] shrink-0 sm:w-[30%]">
+        <img
+          src={getAssetPath("profile.png")}
+          alt="徐振旭"
+          width="420"
+          height="420"
+          class="border-border w-full rounded border"
+          loading="eager"
+        />
+      </figure>
+      <div class="space-y-3">
+        <p>
+          我是徐振旭。做过十多年翻译，也在 State Street
+          做过三年数据仓库产品支持。现在主要做技术写作、数据运营和文档系统，关注的东西一直没变：把复杂的文本和系统讲清楚。
+        </p>
+        <p>
+          日常用 Emacs 和 Lisp，喜欢可组合、可脚本化的工作环境。这个站点用来记软件设计、翻译和技术写作里的问题，偶尔写一点读书笔记。
+        </p>
+        <p class="text-muted-foreground text-sm">
+          邮箱 <a class="hover:text-accent underline" href="mailto:zhenxuxu11@fudan.edu.cn">zhenxuxu11@fudan.edu.cn</a>
+          · <a class="hover:text-accent underline" href="https://github.com/AnabasisXu">GitHub</a>
+          · <a class="hover:text-accent underline" href={getRelativeLocaleUrl(locale, "about")}>关于</a>
+        </p>
+      </div>
+    </div>
+
+    <section id="news" class="pt-10">
+      <h2 class="mb-3 text-[2rem] leading-tight">动态</h2>
+      <table class="border-border w-full border-t text-[0.95rem]">
+        <tbody>
+          {
+            news.map(item => {
+              const href = item.postId ? postHref(item.postId) : undefined;
+              return (
+                <tr class="border-border border-b last:border-0">
+                  <th
+                    scope="row"
+                    class="text-muted-foreground w-[20%] py-2 pe-4 text-start align-top font-normal whitespace-nowrap"
+                  >
+                    {item.date}
+                  </th>
+                  <td class="py-2">
+                    {href ? (
+                      <a class="hover:text-accent underline decoration-dashed underline-offset-4" href={href}>
+                        {item.text}
+                      </a>
+                    ) : (
+                      item.text
+                    )}
+                  </td>
+                </tr>
+              );
+            })
+          }
+        </tbody>
+      </table>
     </section>
 
-    {
-      featuredPosts.length > 0 && (
-        <section
-          id="featured"
-          class:list={[
-            "pt-12 pb-6",
-            { "border-border border-b": recentPosts.length > 0 },
-          ]}
-        >
-          <h2 class="text-2xl font-semibold tracking-wide">
-            {t.home.featured}
-          </h2>
-          <ul>
-            {featuredPosts.map(data => (
-              <Card variant="h3" {...data} />
-            ))}
-          </ul>
-        </section>
-      )
-    }
+    <section id="posts" class="pt-10">
+      <h2 class="mb-3 text-[2rem] leading-tight">
+        <a class="hover:text-accent" href={getRelativeLocaleUrl(locale, "posts")}>最新文章</a>
+      </h2>
+      <table class="border-border w-full border-t text-[0.95rem]">
+        <tbody>
+          {
+            recentPosts.map(post => (
+              <tr class="border-border border-b last:border-0">
+                <th
+                  scope="row"
+                  class="text-muted-foreground w-[20%] py-2 pe-4 text-start align-top font-normal whitespace-nowrap"
+                >
+                  {formatDateISO(post.data.pubDatetime, timezone)}
+                </th>
+                <td class="py-2">
+                  <a
+                    class="hover:text-accent underline decoration-dashed underline-offset-4"
+                    href={getPostUrl(post.id, post.filePath, locale)}
+                  >
+                    {post.data.title}
+                  </a>
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </section>
 
-    {
-      recentPosts.length > 0 && (
-        <section id="recent-posts" class="pt-12 pb-6">
-          <h2 class="text-2xl font-semibold tracking-wide">
-            {t.home.recentPosts}
-          </h2>
-          <ul>
-            {recentPosts.slice(0, postsConfig.perIndex).map(data => (
-              <Card variant="h3" {...data} />
-            ))}
-          </ul>
-        </section>
-      )
-    }
-
-    <div class="my-8 text-center">
-      <LinkButton href={getRelativeLocaleUrl(locale, "posts")}>
-        {t.home.allPosts}
-        <IconArrowRight class="inline-block rtl:-rotate-180" />
-      </LinkButton>
-    </div>
+    <section id="publications" class="pt-10">
+      <h2 class="mb-3 text-[2rem] leading-tight">
+        <a class="hover:text-accent" href={getRelativeLocaleUrl(locale, "publications")}>代表译作</a>
+      </h2>
+      <ol class="border-border border-t">
+        {
+          publications.map(item => (
+            <li class="border-border flex gap-4 border-b py-3 last:border-0">
+              <div class="text-muted-foreground w-[20%] shrink-0 text-[0.95rem]">
+                {item.year}
+              </div>
+              <div>
+                <div class="font-normal">
+                  {item.chineseTitle ? `《${item.chineseTitle}》` : item.title}
+                </div>
+                <div class="text-[0.95rem]">{item.authors}</div>
+                <div class="text-muted-foreground text-[0.95rem] italic">
+                  {item.venue}
+                </div>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
   </main>
   <Footer />
 </Layout>

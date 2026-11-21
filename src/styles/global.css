@@ -3,9 +3,34 @@
 @import "./typography.css";
 @import "rehype-callouts/theme/obsidian";
 
+/* Roboto variable, latin subset. CJK glyphs fall back to system fonts. */
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../assets/fonts/roboto-latin.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 @layer base {
+  body {
+    @apply font-light;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-light;
+    line-height: 1.2;
+  }
   * {
     @apply border-border outline-accent/75;
     scrollbar-width: auto;
@@ -23,7 +48,7 @@
 }
 
 @utility max-w-app {
-  @apply max-w-3xl;
+  @apply max-w-[930px];
 }
 
 @utility app-layout {

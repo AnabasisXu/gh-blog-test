@@ -1,0 +1,40 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Main from "@/components/Main.astro";
+import Footer from "@/components/Footer.astro";
+import { publications } from "@/data/publications";
+import config from "@/config";
+---
+
+<Layout title={`译作 | ${config.site.title}`} description="书籍翻译，按出版或计划时间倒序。">
+  <Header />
+  <Breadcrumb />
+  <Main pageTitle="译作" pageDesc="书籍翻译，按出版或计划时间倒序。">
+    <ol class="border-border border-t">
+      {
+        publications.map(item => (
+          <li class="border-border flex gap-4 border-b py-4 last:border-0">
+            <div class="text-muted-foreground w-[20%] shrink-0 text-[0.95rem]">
+              {item.year}
+            </div>
+            <div>
+              <div class="font-normal">
+                {item.chineseTitle ? `《${item.chineseTitle}》` : item.title}
+              </div>
+              {item.chineseTitle && (
+                <div class="text-[0.95rem] italic">{item.title}</div>
+              )}
+              <div class="text-[0.95rem]">{item.authors}</div>
+              <div class="text-muted-foreground text-[0.95rem] italic">
+                {item.venue}
+              </div>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </Main>
+  <Footer />
+</Layout>
