@@ -2,7 +2,7 @@
 
 个人博客，Astro + [AstroPaper](https://github.com/satnaing/astro-paper) 主题。
 
-- 站点地址：https://anabasisxu.github.io/gh-blog-test/
+- 站点地址：https://anabasisxu.github.io/blog/
 - 文章目录：`src/content/posts/`
 - 站点信息：`astro-paper.config.ts`（标题、作者、社交链接、分页）
 - 界面文案：`src/i18n/lang/zh-CN.ts`
@@ -51,7 +51,7 @@ description: "一句话摘要"
 
 推送到 `main` 触发 `.github/workflows/deploy.yml`：`npm ci` → `npm run build` → 上传 `dist/` 到 GitHub Pages。
 
-站点发布在子路径 `/gh-blog-test/`，对应 `astro.config.ts` 里的 `base`。
+站点发布在子路径 `/blog/`，对应 `astro.config.ts` 里的 `base`。
 
 ## 许可
 

@@ -19,7 +19,7 @@ import config from "./astro-paper.config";
 
 export default defineConfig({
   site: config.site.url,
-  base: "/gh-blog-test",
+  base: "/blog",
   integrations: [
     mdx(),
     sitemap({
